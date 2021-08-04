@@ -1,0 +1,34 @@
+<div class="modal fade" id="newDialogModal" tabindex="-1" aria-labelledby="newDialogModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="needs-validation" novalidate>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newDialogModalLabel">Create New Dialog 👫</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="chatroomName" class="form-label">Chatroom</label>
+                        <input type="text" class="form-control" id="chatroomName" placeholder="Chatroom's name (may be empty)">
+                    </div>
+                    <div class="mb-3 has-validation">
+                        <label for="selectUser" class="form-label">User</label>
+                        <select class="form-select" aria-label="Select User to chat" id="selectUser" required>
+                            <option selected disabled value="">Select User To Chat</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.userIdentifier }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">
+                            Please choose a username.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="createChatroomButton">Create Chatroom ✅</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close ❎</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -3,13 +3,17 @@
 {% block title %}Chatrooms{% endblock %}
 
 {% block body %}
+{% include 'room/_new_dialog_modal.html.twig' %}
 <div class="container">
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-
-            <div class="list-group">
-                <div class="position-relative"></div>
+            <div class="position-relative">
+                <div class="position-absolute end-0">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#newDialogModal" class="no-style"><i class="bi-pencil-square"></i></button>
+                </div>
+            </div>
+            <div class="list-group mt-5">
                 {% for chatroom in chatrooms %}
                 <a href="{{ path('roomView') }}" class="list-group-item list-group-item-action {# for unread messages bg-light #}" aria-current="true">
                     <div class="d-flex w-100 justify-content-between">

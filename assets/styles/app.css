@@ -1,5 +1,6 @@
 @import "chat.css";
 @import "~bootstrap";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 
 html, body {
     height: 100%;
@@ -17,3 +18,16 @@ body {
     flex-shrink: 0;
 }
 
+i.bi-pencil-square {
+    font-size: 2rem;
+    color: #8c9aee;
+}
+
+i.bi-pencil-square:hover {
+    color: #5267e7;
+    cursor: pointer;
+}
+button.no-style {
+    border: none;
+    background: none;
+}
