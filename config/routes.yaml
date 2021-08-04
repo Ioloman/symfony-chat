@@ -1,5 +1,10 @@
+roomList:
+  path: /room
+  methods: GET
+  controller: App\Controller\RoomController::list
+
 roomView:
-  path: /room/1
+  path: /room/{id}
   methods: GET
   controller: App\Controller\RoomController::index
 
@@ -12,10 +17,10 @@ mainPage:
     keepRequestMethod: true
     route: 'roomList'
 
-roomList:
-  path: /room
-  methods: GET
-  controller: App\Controller\RoomController::list
+roomCreate:
+  path: /room/new
+  methods: POST
+  controller: App\Controller\RoomController::create
 
 login:
   path: /login

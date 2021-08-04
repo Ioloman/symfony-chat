@@ -15,7 +15,7 @@
             </div>
             <div class="list-group mt-5">
                 {% for chatroom in chatrooms %}
-                <a href="{{ path('roomView') }}" class="list-group-item list-group-item-action {# for unread messages bg-light #}" aria-current="true">
+                <a href="{{ path('roomView', {id: chatroom.id}) }}" class="list-group-item list-group-item-action {# for unread messages bg-light #}" aria-current="true">
                     <div class="d-flex w-100 justify-content-between">
                         <h6 class="mb-1">{{ chatroom.name }}</h6>
                         <small>{{ chatroom.updatedAt|ago }}</small>

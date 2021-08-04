@@ -9,11 +9,11 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="chatroomName" class="form-label">Chatroom</label>
-                        <input type="text" class="form-control" id="chatroomName" placeholder="Chatroom's name (may be empty)">
+                        <input type="text" name="name" class="form-control" id="chatroomName" placeholder="Chatroom's name (may be empty)">
                     </div>
                     <div class="mb-3 has-validation">
                         <label for="selectUser" class="form-label">User</label>
-                        <select class="form-select" aria-label="Select User to chat" id="selectUser" required>
+                        <select class="form-select" aria-label="Select User to chat" id="selectUser" name="email" required>
                             <option selected disabled value="">Select User To Chat</option>
                             {% for user in users %}
                             <option value="{{ user.id }}">{{ user.userIdentifier }}</option>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="createChatroomButton">Create Chatroom ✅</button>
+                    <button type="submit" class="btn btn-primary" id="createChatroomButton" data-controller-url="{{ path('roomCreate') }}">Create Chatroom ✅</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close ❎</button>
                 </div>
             </form>
