@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -52,6 +54,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $profilePic;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Chatroom::class, mappedBy="users")
+     */
+    private $chatrooms;
+
+    public function __construct()
+    {
+        $this->chatrooms = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -174,6 +186,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePic(?string $profilePic): self
     {
         $this->profilePic = $profilePic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Chatroom[]
+     */
+    public function getChatrooms(): Collection
+    {
+        return $this->chatrooms;
+    }
+
+    public function addChatroom(Chatroom $chatroom): self
+    {
+        if (!$this->chatrooms->contains($chatroom)) {
+            $this->chatrooms[] = $chatroom;
+            $chatroom->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChatroom(Chatroom $chatroom): self
+    {
+        if ($this->chatrooms->removeElement($chatroom)) {
+            $chatroom->removeUser($this);
+        }
 
         return $this;
     }
