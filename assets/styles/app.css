@@ -1,4 +1,5 @@
 @import "chat.css";
+@import "~bootstrap";
 
 html, body {
     height: 100%;
