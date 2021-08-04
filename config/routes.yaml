@@ -1,4 +1,18 @@
 roomView:
-  path: /room
+  path: /room/1
   methods: GET
   controller: App\Controller\RoomController::index
+
+mainPage:
+  path: /
+  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
+  defaults:
+    permanent: true
+    keepQueryParams: true
+    keepRequestMethod: true
+    route: 'roomList'
+
+roomList:
+  path: /room
+  methods: GET
+  controller: App\Controller\RoomController::list

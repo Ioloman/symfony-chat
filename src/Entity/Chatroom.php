@@ -22,7 +22,7 @@ class Chatroom
     /**
      * @ORM\Column(type="string", length=10)
      */
-    private $status = 'open';
+    private $status = 'opened';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
