@@ -10,3 +10,14 @@ import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';
+
+import './js/createDialogModal';
+
+// for development
+// TODO: remove later
+import $ from 'jquery';
+global.$ = $;
+
+// Bootstrap 5 js lib
+import * as bootstrap from 'bootstrap';
+global.bootstrap = bootstrap;
