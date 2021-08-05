@@ -6,6 +6,7 @@ use App\Entity\Chatroom;
 use App\Repository\ChatroomRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,12 +24,19 @@ class RoomController extends AbstractController
 
     public function list(ChatroomRepository $chatroomRepository, UserRepository $userRepository): Response
     {
-        return $this->render('room/list.html.twig', [
-            'chatrooms' => $chatroomRepository->findBy([], ['createdAt' => 'DESC']),
-            'users' => $userRepository->findAll(),
-        ]);
+        $templateParams = [];
+
+        if ($this->isGranted("ROLE_USER")) {
+            $templateParams['chatrooms'] = $chatroomRepository->findChatroomsByUser($this->getUser());
+            $templateParams['users'] = $userRepository->findAll();
+        }
+
+        return $this->render('room/list.html.twig', $templateParams);
     }
 
+    /**
+     * @IsGranted("ROLE_USER")
+     */
     public function create(
         Request $request,
         UserRepository $userRepository,

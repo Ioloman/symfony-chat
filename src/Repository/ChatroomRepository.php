@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Chatroom;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Chatroom|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,22 +21,26 @@ class ChatroomRepository extends ServiceEntityRepository
         parent::__construct($registry, Chatroom::class);
     }
 
-    // /**
-    //  * @return Chatroom[] Returns an array of Chatroom objects
-    //  */
-    /*
-    public function findByExampleField($value)
+
+     /**
+      * @return Chatroom[] Returns an array of Chatroom objects
+      */
+    public function findChatroomsByUser(?UserInterface $user)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+        return
+            $user
+            ?
+            $this->createQueryBuilder('c')
+            ->innerJoin('c.users', 'u')
+            ->andWhere('u.id = :user_id')
+            ->setParameter('user_id', $user->getId())
+            ->orderBy('c.createdAt', 'DESC')
             ->getQuery()
             ->getResult()
+            :
+            null
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Chatroom
