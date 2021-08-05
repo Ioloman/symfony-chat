@@ -24,7 +24,7 @@ class RoomController extends AbstractController
     public function list(ChatroomRepository $chatroomRepository, UserRepository $userRepository): Response
     {
         return $this->render('room/list.html.twig', [
-            'chatrooms' => $chatroomRepository->findAll(),
+            'chatrooms' => $chatroomRepository->findBy([], ['createdAt' => 'DESC']),
             'users' => $userRepository->findAll(),
         ]);
     }

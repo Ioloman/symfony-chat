@@ -41,9 +41,15 @@ class Chatroom
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="chatroom", orphanRemoval=true)
+     */
+    private $messages;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,6 +113,36 @@ class Chatroom
     public function removeUser(User $user): self
     {
         $this->users->removeElement($user);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setChatroom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getChatroom() === $this) {
+                $message->setChatroom(null);
+            }
+        }
 
         return $this;
     }
