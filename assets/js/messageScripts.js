@@ -4,10 +4,14 @@ function setMessage(messageHtml) {
     const $lastMessageBox = $('.media-chat').last();
     const $newMessageBox = $(messageHtml);
 
-    if ($lastMessageBox.hasClass('media-chat-reverse')) {
-        $lastMessageBox.find('.media-body').append($newMessageBox.find('.media-body>p'));
+    if ($lastMessageBox.length === 0) {
+        $('#chatContent').prepend($newMessageBox);
     } else {
-        $lastMessageBox.after($newMessageBox);
+        if ($lastMessageBox.hasClass('media-chat-reverse')) {
+            $lastMessageBox.find('.media-body').append($newMessageBox.find('.media-body>p'));
+        } else {
+            $lastMessageBox.after($newMessageBox);
+        }
     }
 }
 

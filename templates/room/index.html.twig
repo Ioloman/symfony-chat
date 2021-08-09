@@ -9,10 +9,19 @@
                 <div class="col-md-6">
                     <div class="card card-bordered" id="chatBody">
                         <div class="card-header">
-                            <h4 class="card-title"><strong>{{ chatroom.name }}</strong></h4> <a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>
+                            <h4 class="card-title">
+                                <strong>
+                                    {% if chatroom.name is not null %}
+                                    {{ chatroom.name }}
+                                    {% else %}
+                                    {% for user in chatroom.users %}{% if user != app.user %}{{ user.userIdentifier }}{% endif %}{% endfor %}
+                                    {% endif %}
+                                </strong>
+                            </h4>
+                            {% for user in chatroom.users %}{% if user != app.user %}<img class="avatar avatar-xs" src="{{ user.profilePic }}" alt="...">{% endif %}{% endfor %}
                         </div>
                         <div class="ps-container ps-theme-default ps-active-y" id="chatContent">
-                            <div class="media media-meta-day">Today</div>
+{#                            <div class="media media-meta-day">Today</div>#}
                             {% set newUser = true %}
 
                             {% for message in chatroom.messages %}

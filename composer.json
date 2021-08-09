@@ -23,7 +23,9 @@
         "symfony/security-bundle": "5.3.*",
         "symfony/twig-bundle": "5.3.*",
         "symfony/webpack-encore-bundle": "^1.12",
-        "symfony/yaml": "5.3.*"
+        "symfony/yaml": "5.3.*",
+        "twig/extra-bundle": "^3.3",
+        "twig/string-extra": "^3.3"
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^6.6",
