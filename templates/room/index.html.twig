@@ -7,68 +7,40 @@
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-6">
-                    <div class="card card-bordered">
+                    <div class="card card-bordered" id="chatBody">
                         <div class="card-header">
                             <h4 class="card-title"><strong>{{ chatroom.name }}</strong></h4> <a class="btn btn-xs btn-secondary" href="#" data-abc="true">Let's Chat App</a>
                         </div>
-                        <div class="ps-container ps-theme-default ps-active-y" id="chat-content">
-                            <div class="media media-chat"> <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                                <div class="media-body">
-                                    <p>Hi</p>
-                                    <p>How are you ...???</p>
-                                    <p>What are you doing tomorrow?<br> Can we come up a bar?</p>
-                                    <p class="meta"><time datetime="2018">23:58</time></p>
-                                </div>
-                            </div>
+                        <div class="ps-container ps-theme-default ps-active-y" id="chatContent">
                             <div class="media media-meta-day">Today</div>
-                            <div class="media media-chat media-chat-reverse">
-                                <div class="media-body">
-                                    <p>Hiii, I'm good.</p>
-                                    <p>How are you doing?</p>
-                                    <p>Long time no see! Tomorrow office. will be free on sunday.</p>
-                                    <p class="meta"><time datetime="2018">00:06</time></p>
+                            {% set newUser = true %}
+
+                            {% for message in chatroom.messages %}
+                            {% if prevUser is defined and prevUser != message.author %}
                                 </div>
                             </div>
-                            <div class="media media-chat"> <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
+                            {% set newUser = true %}
+                            {% endif %}
+                            {% if newUser %}
+                            <div class="media media-chat {% if message.author == app.user %}media-chat-reverse{% endif %}">
+                                <div>
+                                    <img class="avatar" src="{{ message.author.profilePic }}" alt="user pic">
+                                    <span>{{ message.author.userIdentifier }}</span>
+                                    <time datetime="2018">{{ message.createdAt|date('H:i') }}</time>
+                                </div>
                                 <div class="media-body">
-                                    <p>Okay</p>
-                                    <p>We will go on sunday? </p>
-                                    <p class="meta"><time datetime="2018">00:07</time></p>
+                                {% set newUser = false %}
+                                {% set prevUser = message.author %}
+                            {% endif %}
+                                    <p>{{ message.text }}</p>
+                            {% endfor %}
+
+                            {% if chatroom.messages.count > 0 %}
                                 </div>
                             </div>
-                            <div class="media media-chat media-chat-reverse">
-                                <div class="media-body">
-                                    <p>That's awesome!</p>
-                                    <p>I will meet you Sandon Square sharp at 10 AM</p>
-                                    <p>Is that okay?</p>
-                                    <p class="meta"><time datetime="2018">00:09</time></p>
-                                </div>
-                            </div>
-                            <div class="media media-chat"> <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                                <div class="media-body">
-                                    <p>Okay i will meet you on Sandon Square </p>
-                                    <p class="meta"><time datetime="2018">00:10</time></p>
-                                </div>
-                            </div>
-                            <div class="media media-chat media-chat-reverse">
-                                <div class="media-body">
-                                    <p>Do you have pictures of Matley Marriage?</p>
-                                    <p class="meta"><time datetime="2018">00:10</time></p>
-                                </div>
-                            </div>
-                            <div class="media media-chat"> <img class="avatar" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                                <div class="media-body">
-                                    <p>Sorry I don't have. i changed my phone.</p>
-                                    <p class="meta"><time datetime="2018">00:12</time></p>
-                                </div>
-                            </div>
-                            <div class="media media-chat media-chat-reverse">
-                                <div class="media-body">
-                                    <p>Okay then see you on sunday!!</p>
-                                    <p class="meta"><time datetime="2018">00:12</time></p>
-                                </div>
-                            </div>
-                            <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
+                            {% endif %}
+
+                            <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;" id="chatBottom">
                                 <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
                             </div>
                             <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
@@ -76,12 +48,12 @@
                             </div>
                         </div>
                         <div class="publisher bt-1 border-light">
-                            <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/administrator-male.png" alt="...">
-                            <input class="publisher-input" type="text" placeholder="Write something">
+                            <img class="avatar avatar-xs" src="{{ app.user.profilePic }}" alt="...">
+                            <input class="publisher-input" type="text" placeholder="Write your message..." id="messageInput">
                             <span class="publisher-btn file-group">
                                 📎 <input type="file"> </span>
                             <a class="publisher-btn text-decoration-none" href="#" data-abc="true">😃</a>
-                            <a class="publisher-btn text-info text-decoration-none" href="#" data-abc="true">💌</a> </div>
+                            <a class="publisher-btn text-info text-decoration-none" href="#" data-abc="true" id="sendMessageButton">💌</a> </div>
                     </div>
                 </div>
                 <div class="col-md-3"></div>

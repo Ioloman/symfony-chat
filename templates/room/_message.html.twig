@@ -1,0 +1,12 @@
+<div class="media media-chat media-chat-reverse">
+    <div>
+        <img class="avatar" src="{{ message.author.profilePic }}" alt="user pic">
+        <span>{{ message.author.userIdentifier }}</span>
+        <time datetime="2018">{{ message.createdAt|date('H:i') }}</time>
+    </div>
+    <div class="media-body">
+
+        <p>{{ message.text }}</p>
+
+    </div>
+</div>

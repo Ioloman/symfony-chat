@@ -12,6 +12,7 @@ import './styles/app.css';
 import './bootstrap';
 
 import './js/createDialogModal';
+import './js/messageScripts';
 
 // for development
 // TODO: remove later

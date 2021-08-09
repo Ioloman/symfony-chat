@@ -145,7 +145,7 @@ h4.card-title {
     margin: 0 8px
 }
 
-.media-chat .media-body p.meta {
+.media-chat p.meta {
     background-color: transparent !important;
     padding: 0;
     opacity: .8
@@ -166,6 +166,12 @@ h4.card-title {
     padding: 16px 12px;
     -webkit-transition: background-color .2s linear;
     transition: background-color .2s linear
+}
+
+.media-chat time {
+    color: #8b95a5;
+    opacity: .8;
+    font-weight: 400
 }
 
 .media-meta-day::before {
@@ -191,14 +197,6 @@ h4.card-title {
     margin-left: 16px
 }
 
-.media-chat.media-chat-reverse {
-    padding-right: 12px;
-    padding-left: 64px;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: reverse;
-    flex-direction: row-reverse
-}
-
 .media-chat {
     padding-right: 64px;
     margin-bottom: 0
@@ -211,8 +209,6 @@ h4.card-title {
 }
 
 .media-chat.media-chat-reverse .media-body p {
-    float: right;
-    clear: right;
     background-color: #48b0f7;
     color: #fff
 }

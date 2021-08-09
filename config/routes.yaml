@@ -3,9 +3,14 @@ roomList:
   methods: GET
   controller: App\Controller\RoomController::list
 
+roomCreate:
+  path: /room/new
+  methods: POST
+  controller: App\Controller\RoomController::create
+
 roomView:
   path: /room/{id}
-  methods: GET
+  methods: GET|POST
   controller: App\Controller\RoomController::index
 
 mainPage:
@@ -16,11 +21,6 @@ mainPage:
     keepQueryParams: true
     keepRequestMethod: true
     route: 'roomList'
-
-roomCreate:
-  path: /room/new
-  methods: POST
-  controller: App\Controller\RoomController::create
 
 login:
   path: /login

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Chatroom;
+use App\Entity\Message;
 use App\Repository\ChatroomRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,10 +16,29 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RoomController extends AbstractController
 {
-    public function index(Chatroom $chatroom): Response
+    public function index(Chatroom $chatroom, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $currentUser = $this->getUser();
+
+        if ($request->isXmlHttpRequest()) {
+            $message = new Message();
+            $message->setAuthor($currentUser);
+            $message->setChatroom($chatroom);
+            $message->setText($request->request->get('message'));
+
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            return $this->render('room/_message.html.twig', ['message' => $message]);
+        }
+
+        $users = $chatroom->getUsers()->filter(function ($user) use ($currentUser) {
+            return $user != $currentUser;
+        });
+
         return $this->render('room/index.html.twig', [
-            'chatroom' => $chatroom
+            'chatroom' => $chatroom,
+            'users' => $users
         ]);
     }
 
