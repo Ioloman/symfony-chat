@@ -68,9 +68,12 @@ $(function () {
     });
 
     $('#attachFile').click(function () {
-        if ($('#filesInput')[0].files[0]) {
+        const $input = $('#filesInput');
+        if ($input[0].files[0]) {
             if (!availableMIMETypes.includes($('#filesInput')[0].files[0].type)) {
+                $input.addClass('is-invalid')
             } else {
+                $input.removeClass('is-invalid')
                 $('#closeModalButton').click();
             }
         }
