@@ -250,9 +250,11 @@ h4.card-title {
 .publisher-input {
     -webkit-box-flex: 1;
     flex-grow: 1;
-    border: none;
     outline: none !important;
-    background-color: transparent
+    border-radius: 6px;
+    border: 1px solid #a99999;
+    padding: 5px;
+    background-color: white;
 }
 
 button,
