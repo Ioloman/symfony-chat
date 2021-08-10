@@ -30,10 +30,14 @@
                         <small>{{ chatroom.updatedAt|ago }}</small>
                     </div>
                     <div class="d-flex w-100">
-                        {% set lastMessage = chatroom.messages|last %}
-                        <img class="avatar avatar-xs" src="{{ lastMessage.author.profilePic }}" alt="...">
-                        <small class="ms-2 mt-2">{{ lastMessage.text|u.truncate(50, '...') }}</small>
-                        {# for unread messages <span class="badge bg-primary rounded-pill">1</span>#}
+                        {% if chatroom.messages|last %}
+                            {% set lastMessage = chatroom.messages|last %}
+                            <img class="avatar avatar-xs" src="{{ lastMessage.author.profilePic }}" alt="...">
+                            <small class="ms-2 mt-2">{{ lastMessage.text|u.truncate(50, '...') }}</small>
+                            {# for unread messages <span class="badge bg-primary rounded-pill">1</span>#}
+                        {% else %}
+                            <small class="ms-2 mt-2">No messages in this chat...</small>
+                        {% endif %}
                     </div>
                 </a>
                 {% else %}

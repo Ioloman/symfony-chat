@@ -15,6 +15,9 @@ function setMessage(messageHtml) {
     }
 }
 
+const scrollChatDown = () => $('#chatContent').scrollTop($('#chatBottom').offset().top);
+
+
 function sendMessageEventHandler(e) {
     e.preventDefault();
     const $input = $('#messageInput');
@@ -27,6 +30,7 @@ function sendMessageEventHandler(e) {
         })
             .done(function (data) {
                 setMessage(data);
+                scrollChatDown();
             })
         ;
         $input.val("");
@@ -34,7 +38,7 @@ function sendMessageEventHandler(e) {
 }
 
 $(function () {
-    $('#chatContent').scrollTop($('#chatBottom').offset().top);
+    scrollChatDown();
 
     $('#messageInput').keypress(function (e) {
         if (e.which === 13) {
