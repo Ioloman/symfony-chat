@@ -21,6 +21,7 @@ class RoomController extends AbstractController
         $currentUser = $this->getUser();
 
         if ($request->isXmlHttpRequest()) {
+            dd($request->files);
             $message = new Message();
             $message->setAuthor($currentUser);
             $message->setChatroom($chatroom);

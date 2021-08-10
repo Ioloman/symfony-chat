@@ -1,4 +1,7 @@
 import $ from 'jquery';
+import { Modal } from "bootstrap";
+
+const availableMIMETypes = ['image/jpeg', 'image/png'];
 
 function setMessage(messageHtml) {
     const $lastMessageBox = $('.media-chat').last();
@@ -21,12 +24,22 @@ const scrollChatDown = () => $('#chatContent').scrollTop($('#chatBottom').offset
 function sendMessageEventHandler(e) {
     e.preventDefault();
     const $input = $('#messageInput');
-    if ($input.val() !== "") {
+    const $fileInput = $('#filesInput');
+    if ($input.val() !== "" || $fileInput.val() !== "") {
+        const formData = new FormData();
+        formData.append("message", $input.val());
+        if ($fileInput[0].files[0] && availableMIMETypes.includes($fileInput[0].files[0].type)) {
+            formData.append("file", $fileInput[0].files[0], $fileInput[0].files[0].name);
+        }
+
         $
             .ajax({
             url: window.location.href,
             method: 'POST',
-            data: {message: $input.val()}
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
         })
             .done(function (data) {
                 setMessage(data);
@@ -48,5 +61,18 @@ $(function () {
 
     $('#sendMessageButton').click(function (e) {
         sendMessageEventHandler(e);
+    });
+
+    $('#closeAttachmentModal').click(function () {
+        $('#filesInput').val("");
+    });
+
+    $('#attachFile').click(function () {
+        if ($('#filesInput')[0].files[0]) {
+            if (!availableMIMETypes.includes($('#filesInput')[0].files[0].type)) {
+            } else {
+                $('#closeModalButton').click();
+            }
+        }
     });
 });

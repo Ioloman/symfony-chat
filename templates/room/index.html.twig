@@ -3,6 +3,7 @@
 {% block title %}Chat{% endblock %}
 
 {% block body %}
+    {% include 'room/_attach_file_modal.html.twig' %}
     <div class="container">
             <div class="row">
                 <div class="col-md-3"></div>
@@ -58,9 +59,8 @@
                         </div>
                         <div class="publisher bt-1 border-light">
                             <img class="avatar avatar-xs" src="{{ app.user.profilePic }}" alt="...">
-                            <input class="publisher-input" type="text" placeholder="Write your message..." id="messageInput">
-                            <span class="publisher-btn file-group">
-                                📎 <input type="file"> </span>
+                            <input class="publisher-input" type="text" placeholder="Write your message..." id="messageInput" autofocus>
+                            <button class="publisher-btn file-group" data-bs-toggle="modal" data-bs-target="#attachFileModal">📎</button>
                             <a class="publisher-btn text-decoration-none" href="#" data-abc="true">😃</a>
                             <a class="publisher-btn text-info text-decoration-none" href="#" data-abc="true" id="sendMessageButton">💌</a> </div>
                     </div>
