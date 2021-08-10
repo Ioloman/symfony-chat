@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block body %}
+    {% include 'room/_attach_file_modal.html.twig' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                {{ form_start(form) }}
+
+                {{ form_row(form.firstName, {label: 'First Name'}) }}
+                {{ form_row(form.lastName, {label: 'Last Name'}) }}
+                {{ form_row(form.profilePicName, {label: 'Profile avatar'}) }}
+
+                <button class="btn btn-lg btn-primary" type="submit">
+                    Save
+                </button>
+
+                {{ form_end(form) }}
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+{% endblock %}

@@ -11,6 +11,7 @@
 ###> custom configs ###
 node_modules/
 .idea/
+/public/uploads/
 ###< custom configs ###
 
 ###> symfony/webpack-encore-bundle ###

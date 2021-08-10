@@ -31,3 +31,8 @@ logout:
   path: /logout
   methods: GET
   controller: App\Controller\SecurityController::logout
+
+profile:
+  path: /profile
+  methods: GET|POST
+  controller: App\Controller\SecurityController::profile
