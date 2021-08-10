@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Service\UploaderHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -186,7 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getProfilePic(): ?string
     {
-        return $this->profilePic;
+        return UploaderHelper::USER_PROFILE_PIC.'/'.$this->profilePic;
     }
 
     public function setProfilePic(?string $profilePic): self

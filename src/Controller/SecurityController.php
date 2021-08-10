@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserProfileType;
+use App\Service\UploaderHelper;
 use Gedmo\Sluggable\Util\Urlizer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +36,10 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    public function profile(Request $request): Response
+    /**
+     * @IsGranted("ROLE_USER")
+     */
+    public function profile(Request $request, UploaderHelper $uploaderHelper): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -49,11 +54,7 @@ class SecurityController extends AbstractController
 
             if ($uploadedFile) {
 
-                $destination = $this->getParameter('kernel.project_dir').'/public/uploads/user_pic';
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
-
-                $uploadedFile->move($destination, $newFilename);
+                $newFilename = $uploaderHelper->uploadUserProfilePic($uploadedFile);
 
                 $user->setProfilePic($newFilename);
             }
