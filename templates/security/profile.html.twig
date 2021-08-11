@@ -12,7 +12,16 @@
 
                 {{ form_row(form.firstName, {label: 'First Name'}) }}
                 {{ form_row(form.lastName, {label: 'Last Name'}) }}
-                {{ form_row(form.profilePicName, {label: 'Profile avatar'}) }}
+                <div class="row">
+                    <div class="col-md-9">
+                        {{ form_row(form.profilePicName, {label: 'Profile avatar'}) }}
+                    </div>
+                    <div class="col-md-3">
+                        {% if app.user.profilePic %}
+                        <img src="{{ uploaded_asset(app.user.profilePic)|imagine_filter('user_preview_pic') }}" height="100">
+                        {% endif %}
+                    </div>
+                </div>
 
                 <button class="btn btn-lg btn-primary" type="submit">
                     Save

@@ -18,4 +18,5 @@ return [
     Knp\Bundle\TimeBundle\KnpTimeBundle::class => ['all' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
     Twig\Extra\TwigExtraBundle\TwigExtraBundle::class => ['all' => true],
+    Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
 ];
