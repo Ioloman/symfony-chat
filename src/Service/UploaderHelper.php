@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploaderHelper
@@ -19,13 +20,19 @@ class UploaderHelper
         $this->requestStackContext = $requestStackContext;
     }
 
-    public function uploadUserProfilePic(UploadedFile $uploadedFile): string
+    public function uploadUserProfilePic(File $file): string
     {
         $destination = $this->uploadsPath.'/'.self::USER_PROFILE_PIC;
-        $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
-        $uploadedFile->move($destination, $newFilename);
+        if ($file instanceof UploadedFile) {
+            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        } else {
+            $originalFilename = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+        }
+
+        $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$file->guessExtension();
+
+        $file->move($destination, $newFilename);
 
         return $newFilename;
     }

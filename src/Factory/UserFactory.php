@@ -4,6 +4,9 @@ namespace App\Factory;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\UploaderHelper;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -26,10 +29,15 @@ use Zenstruck\Foundry\Proxy;
  */
 final class UserFactory extends ModelFactory
 {
-    public function __construct()
+    const IMAGES = ['pic1.jpg', 'pic2.png', 'pic3.jpeg'];
+
+    private UploaderHelper $uploaderHelper;
+
+    public function __construct(UploaderHelper $uploaderHelper)
     {
         parent::__construct();
 
+        $this->uploaderHelper = $uploaderHelper;
     }
 
     public function adminUsers(): self
@@ -47,7 +55,6 @@ final class UserFactory extends ModelFactory
             'firstName' => self::faker()->firstName(),
             'lastName' => self::faker()->lastName(),
             'password' => '1234',
-            'profilePic' => 'http://lorempixel.com/640/640/animals/',
         ];
     }
 
@@ -55,7 +62,22 @@ final class UserFactory extends ModelFactory
     {
         // see https://github.com/zenstruck/foundry#initialization
         return $this
-            // ->afterInstantiate(function(User $user) {})
+             ->afterInstantiate(function(User $user) {
+                 $pic = self::faker()->randomElement(self::IMAGES);
+
+                 $fs = new Filesystem();
+                 $targetPath = sys_get_temp_dir().'/'.$pic;
+                 $fs->copy(
+                     __DIR__.'/images/'.$pic,
+                     $targetPath
+                 );
+
+                $user->setProfilePic(
+                    $this->uploaderHelper->uploadUserProfilePic(
+                        new File($targetPath)
+                    )
+                );
+             })
         ;
     }
 
