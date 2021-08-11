@@ -54,7 +54,7 @@ class SecurityController extends AbstractController
 
             if ($uploadedFile) {
 
-                $newFilename = $uploaderHelper->uploadUserProfilePic($uploadedFile);
+                $newFilename = $uploaderHelper->uploadUserProfilePic($uploadedFile, $user->getProfilePic());
 
                 $user->setProfilePic($newFilename);
             }

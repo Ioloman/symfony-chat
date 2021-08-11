@@ -3,27 +3,27 @@
 namespace App\Service;
 
 use Gedmo\Sluggable\Util\Urlizer;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Asset\Context\RequestStackContext;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploaderHelper
 {
-    private string $uploadsPath;
-
     const USER_PROFILE_PIC = 'user_pic';
-    private RequestStackContext $requestStackContext;
 
-    public function __construct(string $uploadsPath, RequestStackContext $requestStackContext)
+    private RequestStackContext $requestStackContext;
+    private FilesystemOperator $publicUploadsStorage;
+
+    public function __construct(FilesystemOperator $publicUploadsStorage, RequestStackContext $requestStackContext)
     {
-        $this->uploadsPath = $uploadsPath;
         $this->requestStackContext = $requestStackContext;
+        $this->publicUploadsStorage = $publicUploadsStorage;
     }
 
-    public function uploadUserProfilePic(File $file): string
+    public function uploadUserProfilePic(File $file, ?string $oldFilename = null): string
     {
-        $destination = $this->uploadsPath.'/'.self::USER_PROFILE_PIC;
-
         if ($file instanceof UploadedFile) {
             $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         } else {
@@ -32,7 +32,26 @@ class UploaderHelper
 
         $newFilename = Urlizer::urlize($originalFilename).'-'.uniqid().'.'.$file->guessExtension();
 
-        $file->move($destination, $newFilename);
+        $stream = fopen($file->getPathname(), 'r');
+        try {
+            $this->publicUploadsStorage->writeStream(
+                self::USER_PROFILE_PIC.'/'.$newFilename,
+                $stream
+            );
+        } catch (FilesystemException $e) {
+            echo 'write error';
+        }
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+
+        if ($oldFilename) {
+            try {
+                $this->publicUploadsStorage->delete($oldFilename);
+            } catch (FilesystemException $e) {
+                echo 'delete error';
+            }
+        }
 
         return $newFilename;
     }
