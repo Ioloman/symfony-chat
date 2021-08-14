@@ -19,7 +19,7 @@
                                     {% endif %}
                                 </strong>
                             </h4>
-                            {% for user in chatroom.users %}{% if user != app.user %}<img class="avatar avatar-xs" src="{{ uploaded_asset(user.profilePic)|imagine_filter('user_preview_pic') }}" alt="...">{% endif %}{% endfor %}
+                            {% for user in chatroom.users %}{% if user != app.user %}<img class="avatar avatar-xs" src="{{ user.profilePic|imagine_filter('user_preview_pic') }}" alt="...">{% endif %}{% endfor %}
                         </div>
                         <div class="ps-container ps-theme-default ps-active-y" id="chatContent">
 {#                            <div class="media media-meta-day">Today</div>#}
@@ -34,7 +34,7 @@
                             {% if newUser %}
                             <div class="media media-chat {% if message.author == app.user %}media-chat-reverse{% endif %}">
                                 <div>
-                                    <img class="avatar" src="{{ uploaded_asset(message.author.profilePic)|imagine_filter('user_preview_pic') }}" alt="user pic">
+                                    <img class="avatar" src="{{ message.author.profilePic|imagine_filter('user_preview_pic') }}" alt="user pic">
                                     <span>{{ message.author.userIdentifier }}</span>
                                     <time datetime="2018">{{ message.createdAt|date('H:i') }}</time>
                                 </div>
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div class="publisher bt-1 border-light">
-                            <img class="avatar avatar-xs" src="{{ uploaded_asset(app.user.profilePic)|imagine_filter('user_preview_pic') }}" alt="...">
+                            <img class="avatar avatar-xs" src="{{ app.user.profilePic|imagine_filter('user_preview_pic') }}" alt="...">
                             <input class="publisher-input" type="text" placeholder="Write your message..." id="messageInput" autofocus>
                             <button class="publisher-btn file-group" data-bs-toggle="modal" data-bs-target="#attachFileModal">📎</button>
                             <a class="publisher-btn text-decoration-none" href="#" data-abc="true">😃</a>

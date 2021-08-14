@@ -1,6 +1,6 @@
 <div class="media media-chat media-chat-reverse">
     <div>
-        <img class="avatar" src="{{ uploaded_asset(message.author.profilePic)|imagine_filter('user_preview_pic') }}" alt="user pic">
+        <img class="avatar" src="{{ message.author.profilePic|imagine_filter('user_preview_pic') }}" alt="user pic">
         <span>{{ message.author.userIdentifier }}</span>
         <time datetime="2018">{{ message.createdAt|date('H:i') }}</time>
     </div>
