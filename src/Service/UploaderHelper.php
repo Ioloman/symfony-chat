@@ -15,11 +15,13 @@ class UploaderHelper
 
     private RequestStackContext $requestStackContext;
     private FilesystemOperator $publicUploadsStorage;
+    private string $uploadedAssetsBaseUrl;
 
-    public function __construct(FilesystemOperator $publicUploadsStorage, RequestStackContext $requestStackContext)
+    public function __construct(FilesystemOperator $publicUploadsStorage, RequestStackContext $requestStackContext, string $uploadedAssetsBaseUrl)
     {
         $this->requestStackContext = $requestStackContext;
         $this->publicUploadsStorage = $publicUploadsStorage;
+        $this->uploadedAssetsBaseUrl = $uploadedAssetsBaseUrl;
     }
 
     public function uploadUserProfilePic(File $file, ?string $oldFilename = null): string
@@ -58,6 +60,6 @@ class UploaderHelper
 
     public function getPublicPath(string $path): string
     {
-        return $this->requestStackContext->getBasePath().'/uploads/'.$path;
+        return $this->uploadedAssetsBaseUrl.'/'.$path;
     }
 }

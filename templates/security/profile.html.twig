@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-3">
                         {% if app.user.profilePic %}
-                        <img src="{{ uploaded_asset(app.user.profilePic)|imagine_filter('user_preview_pic') }}" height="100">
+                        <img src="{{ app.user.profilePic|imagine_filter('user_preview_pic') }}" height="100">
                         {% endif %}
                     </div>
                 </div>
