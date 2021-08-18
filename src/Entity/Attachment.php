@@ -38,6 +38,11 @@ class Attachment
      */
     private $mimeType;
 
+    public function __construct(Message $message)
+    {
+        $this->message = $message;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,13 +51,6 @@ class Attachment
     public function getMessage(): ?Message
     {
         return $this->message;
-    }
-
-    public function setMessage(?Message $message): self
-    {
-        $this->message = $message;
-
-        return $this;
     }
 
     public function getFilename(): ?string

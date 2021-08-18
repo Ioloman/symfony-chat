@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Attachment;
 use App\Entity\Chatroom;
 use App\Entity\Message;
 use App\Repository\ChatroomRepository;
 use App\Repository\UserRepository;
+use App\Service\UploaderHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RoomController extends AbstractController
 {
-    public function index(Chatroom $chatroom, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Chatroom $chatroom, Request $request, UploaderHelper $uploaderHelper, EntityManagerInterface $entityManager): Response
     {
         $currentUser = $this->getUser();
 
@@ -28,6 +31,19 @@ class RoomController extends AbstractController
 
             $entityManager->persist($message);
             $entityManager->flush();
+
+            if ($request->files->get('attachment')) {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $request->files->get('attachment');
+
+                $attachment = new Attachment($message);
+                $attachment->setFilename($uploaderHelper->uploadAttachment($uploadedFile));
+                $attachment->setOriginalFilename($uploadedFile->getClientOriginalName() ?? $attachment->getFilename());
+                $attachment->setMimeType($uploadedFile->getMimeType() ?? 'application/octet-stream');
+
+                $entityManager->persist($attachment);
+                $entityManager->flush();
+            }
 
             return $this->render('room/_message.html.twig', ['message' => $message]);
         }

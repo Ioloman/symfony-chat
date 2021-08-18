@@ -58,6 +58,11 @@ class UploaderHelper
         return $newFilename;
     }
 
+    public function uploadAttachment(File $file): string
+    {
+        
+    }
+
     public function getPublicPath(string $path): string
     {
         return $this->uploadedAssetsBaseUrl.'/'.$path;
