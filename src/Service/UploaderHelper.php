@@ -44,6 +44,23 @@ class UploaderHelper
         return $this->uploadFile($file, self::ATTACHMENT, $this->privateUploadsStorage);
     }
 
+    /**
+     * @param string $filepath
+     * @param bool $isPublic
+     * @return resource
+     * @throws \Exception
+     */
+    public function readStream(string $filepath, bool $isPublic)
+    {
+        $filesystem = $isPublic ? $this->publicUploadsStorage : $this->privateUploadsStorage;
+        try {
+            $file = $filesystem->readStream($filepath);
+        } catch (FilesystemException $e) {
+            throw new \Exception('Error opening file');
+        }
+        return $file;
+    }
+
     public function getPublicPath(string $path): string
     {
         return $this->uploadedAssetsBaseUrl.'/'.$path;

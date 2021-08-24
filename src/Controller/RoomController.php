@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Attachment;
 use App\Entity\Chatroom;
 use App\Entity\Message;
+use App\Entity\User;
 use App\Repository\ChatroomRepository;
 use App\Repository\UserRepository;
 use App\Service\UploaderHelper;
@@ -12,39 +13,27 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RoomController extends AbstractController
 {
-    public function index(Chatroom $chatroom, Request $request, UploaderHelper $uploaderHelper, EntityManagerInterface $entityManager): Response
+    /**
+     * @IsGranted("CHAT_AUTH", subject="chatroom")
+     */
+    public function index(Chatroom $chatroom, Request $request, UploaderHelper $uploaderHelper, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
+        /** @var User $currentUser */
         $currentUser = $this->getUser();
 
         if ($request->isXmlHttpRequest()) {
-            $message = new Message();
-            $message->setAuthor($currentUser);
-            $message->setChatroom($chatroom);
-            $message->setText($request->request->get('message'));
-
-            $entityManager->persist($message);
-            $entityManager->flush();
-            if ($request->files->get('attachment')) {
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $request->files->get('attachment');
-
-                $attachment = new Attachment($message);
-                $attachment->setFilename($uploaderHelper->uploadAttachment($uploadedFile));
-                $attachment->setOriginalFilename($uploadedFile->getClientOriginalName() ?? $attachment->getFilename());
-                $attachment->setMimeType($uploadedFile->getMimeType() ?? 'application/octet-stream');
-
-                $entityManager->persist($attachment);
-                $entityManager->flush();
-            }
-
-            return $this->render('room/_message.html.twig', ['message' => $message]);
+            return $this->handleAjaxMessage($currentUser, $chatroom, $request, $entityManager, $validator, $uploaderHelper);
         }
 
         $users = $chatroom->getUsers()->filter(function ($user) use ($currentUser) {
@@ -55,6 +44,14 @@ class RoomController extends AbstractController
             'chatroom' => $chatroom,
             'users' => $users
         ]);
+    }
+
+    /**
+     * @IsGranted("CHAT_AUTH", subject="chatroom")
+     */
+    public function getAttachment(Chatroom $chatroom, UploaderHelper $uploaderHelper)
+    {
+
     }
 
     public function list(ChatroomRepository $chatroomRepository, UserRepository $userRepository): Response
@@ -98,5 +95,49 @@ class RoomController extends AbstractController
         } else {
             return $this->json(['status' => 'failure', 'message' => "Internal Error! Chatroom wasn't created"]);
         }
+    }
+
+    /**
+     * @param User $currentUser
+     * @param Chatroom $chatroom
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param ValidatorInterface $validator
+     * @param UploaderHelper $uploaderHelper
+     * @return JsonResponse|Response
+     */
+    private function handleAjaxMessage(User $currentUser, Chatroom $chatroom, Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UploaderHelper $uploaderHelper): Response|JsonResponse
+    {
+        $message = new Message();
+        $message->setAuthor($currentUser);
+        $message->setChatroom($chatroom);
+        $message->setText($request->request->get('message'));
+
+        $entityManager->persist($message);
+        $entityManager->flush();
+        if ($request->files->get('attachment')) {
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $request->files->get('attachment');
+
+            $violations = $validator->validate(
+                $uploadedFile,
+                new Image(['maxSize' => '5m'])
+            );
+            if ($violations->count() > 0) {
+                /** @var ConstraintViolation $violation */
+                $violation = $violations[0];
+                return $this->json(['error' => $violation->getMessage()]);
+            }
+
+            $attachment = new Attachment($message);
+            $attachment->setFilename($uploaderHelper->uploadAttachment($uploadedFile));
+            $attachment->setOriginalFilename($uploadedFile->getClientOriginalName() ?? $attachment->getFilename());
+            $attachment->setMimeType($uploadedFile->getMimeType() ?? 'application/octet-stream');
+
+            $entityManager->persist($attachment);
+            $entityManager->flush();
+        }
+
+        return $this->render('room/_message.html.twig', ['message' => $message]);
     }
 }

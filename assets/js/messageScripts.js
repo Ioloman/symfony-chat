@@ -42,11 +42,16 @@ function sendMessageEventHandler(e) {
             processData: false,
         })
             .done(function (data) {
-                setMessage(data);
-                scrollChatDown();
+                if (data['error']) {
+                    alert(data['error'])
+                } else {
+                    setMessage(data);
+                    scrollChatDown();
+                }
             })
         ;
         $input.val("");
+        $fileInput.val("");
     }
 }
 
