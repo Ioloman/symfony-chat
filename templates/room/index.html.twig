@@ -42,7 +42,11 @@
                                 {% set newUser = false %}
                                 {% set prevUser = message.author %}
                             {% endif %}
-                                    <p>{{ message.text }}</p>
+                                    <p>{{ message.text }}
+                                        {% for attachment in message.attachments %}
+                                            <img src="{{ path('attachment', {id: chatroom.id, attach_id: attachment.id}) }}">
+                                        {% endfor %}
+                                    </p>
                             {% endfor %}
 
                             {% if chatroom.messages.count > 0 %}

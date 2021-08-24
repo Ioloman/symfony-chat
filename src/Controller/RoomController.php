@@ -6,6 +6,7 @@ use App\Entity\Attachment;
 use App\Entity\Chatroom;
 use App\Entity\Message;
 use App\Entity\User;
+use App\Repository\AttachmentRepository;
 use App\Repository\ChatroomRepository;
 use App\Repository\UserRepository;
 use App\Service\UploaderHelper;
@@ -13,11 +14,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -49,9 +51,23 @@ class RoomController extends AbstractController
     /**
      * @IsGranted("CHAT_AUTH", subject="chatroom")
      */
-    public function getAttachment(Chatroom $chatroom, UploaderHelper $uploaderHelper)
+    public function getAttachment(Chatroom $chatroom, int $attach_id, UploaderHelper $uploaderHelper, AttachmentRepository $repository): StreamedResponse
     {
+        $attachment = $repository->find($attach_id);
+        $response = new StreamedResponse(function () use ($attachment, $uploaderHelper) {
+            $outputStream = fopen('php://output', 'wb');
+            $fileStream = $uploaderHelper->readStream($attachment->getFilepath(), false);
 
+            stream_copy_to_stream($fileStream, $outputStream);
+        });
+        $response->headers->set('Content-Type', $attachment->getMimeType());
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_INLINE,
+            $attachment->getOriginalFilename()
+        );
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 
     public function list(ChatroomRepository $chatroomRepository, UserRepository $userRepository): Response
@@ -129,15 +145,16 @@ class RoomController extends AbstractController
                 return $this->json(['error' => $violation->getMessage()]);
             }
 
-            $attachment = new Attachment($message);
+            $attachment = new Attachment();
+            $message->addAttachment($attachment);
             $attachment->setFilename($uploaderHelper->uploadAttachment($uploadedFile));
             $attachment->setOriginalFilename($uploadedFile->getClientOriginalName() ?? $attachment->getFilename());
             $attachment->setMimeType($uploadedFile->getMimeType() ?? 'application/octet-stream');
 
             $entityManager->persist($attachment);
-            $entityManager->flush();
         }
-
+        $chatroom->setUpdatedAt(new \DateTime());
+        $entityManager->flush();
         return $this->render('room/_message.html.twig', ['message' => $message]);
     }
 }

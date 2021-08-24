@@ -39,11 +39,6 @@ class Attachment
      */
     private $mimeType;
 
-    public function __construct(Message $message)
-    {
-        $this->message = $message;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -54,7 +49,17 @@ class Attachment
         return $this->message;
     }
 
+    public function setMessage(Message $message)
+    {
+        $this->message = $message;
+    }
+
     public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function getFilepath(): ?string
     {
         return UploaderHelper::ATTACHMENT.'/'.$this->filename;
     }

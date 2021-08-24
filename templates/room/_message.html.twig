@@ -6,7 +6,11 @@
     </div>
     <div class="media-body">
 
-        <p>{{ message.text }}</p>
+        <p>{{ message.text }}
+            {% for attachment in message.attachments %}
+                <img src="{{ path('attachment', {id: message.chatroom.id, attach_id: attachment.id}) }}">
+            {% endfor %}
+        </p>
 
     </div>
 </div>
