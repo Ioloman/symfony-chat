@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AttachmentRepository;
+use App\Service\UploaderHelper;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,7 +56,7 @@ class Attachment
 
     public function getFilename(): ?string
     {
-        return $this->filename;
+        return UploaderHelper::ATTACHMENT.'/'.$this->filename;
     }
 
     public function setFilename(string $filename): self

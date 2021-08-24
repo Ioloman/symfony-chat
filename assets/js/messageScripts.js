@@ -29,7 +29,7 @@ function sendMessageEventHandler(e) {
         const formData = new FormData();
         formData.append("message", $input.val());
         if ($fileInput[0].files[0] && availableMIMETypes.includes($fileInput[0].files[0].type)) {
-            formData.append("file", $fileInput[0].files[0], $fileInput[0].files[0].name);
+            formData.append("attachment", $fileInput[0].files[0], $fileInput[0].files[0].name);
         }
 
         $

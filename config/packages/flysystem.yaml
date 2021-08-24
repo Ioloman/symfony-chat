@@ -5,3 +5,7 @@ flysystem:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/public/%uploads_dir_name%'
+        private.uploads.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/var/%uploads_dir_name%'

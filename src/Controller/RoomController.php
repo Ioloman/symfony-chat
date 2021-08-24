@@ -31,7 +31,6 @@ class RoomController extends AbstractController
 
             $entityManager->persist($message);
             $entityManager->flush();
-
             if ($request->files->get('attachment')) {
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $request->files->get('attachment');
