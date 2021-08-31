@@ -165,4 +165,17 @@ class RoomController extends AbstractController
         $entityManager->flush();
         return $this->render('room/_message.html.twig', ['message' => $message]);
     }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     */
+    public function search(Request $request, ChatroomRepository $chatroomRepository): Response
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(Criteria::expr()->eq('type', 'public'));
+
+        $templateParams['chatrooms'] = $chatroomRepository->matching($criteria);
+
+        return $this->render('room/search.html.twig', $templateParams);
+    }
 }

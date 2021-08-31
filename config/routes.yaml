@@ -3,6 +3,11 @@ roomList:
   methods: GET
   controller: App\Controller\RoomController::list
 
+roomSearch:
+  path: /room/search
+  methods: GET|POST
+  controller: App\Controller\RoomController::search
+
 roomCreate:
   path: /room/new
   methods: POST
