@@ -33,8 +33,9 @@ class Chatroom
 
     /**
      * @ORM\Column(type="string", length=10)
+     * Enum(private, public)
      */
-    private $type = 'dialog';
+    private $type = 'public';
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="chatrooms")
