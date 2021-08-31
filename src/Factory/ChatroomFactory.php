@@ -36,7 +36,7 @@ final class ChatroomFactory extends ModelFactory
         return [
             // TODO add your default values here (https://github.com/zenstruck/foundry#model-factories)
             'status' => self::faker()->boolean(70) ? 'opened' : 'closed',
-            'type' => self::faker()->boolean(70) ? 'dialog' : 'group',
+            'type' => self::faker()->boolean(70) ? 'private' : 'public',
             'name' => self::faker()->name(),
             'updatedAt' => self::faker()->dateTimeBetween('-1 month'),
             'createdAt' => self::faker()->dateTime('-1 month'),

@@ -27,6 +27,17 @@ i.bi-pencil-square:hover {
     color: #5267e7;
     cursor: pointer;
 }
+
+i.bi-plus-circle, i.bi-dash-circle {
+    font-size: 1rem;
+    color: #8c9aee;
+}
+
+i.bi-plus-circle:hover, i.bi-dash-circle:hover {
+    color: #5267e7;
+    cursor: pointer;
+}
+
 button.no-style {
     border: none;
     background: none;

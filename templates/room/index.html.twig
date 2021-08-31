@@ -15,7 +15,7 @@
                                     {% if chatroom.name is not null %}
                                     {{ chatroom.name }}
                                     {% else %}
-                                    {% for user in chatroom.users %}{% if user != app.user %}{{ user.userIdentifier }}{% endif %}{% endfor %}
+                                    {{ chatroom.users|filter(u => u != app.user)|map(u => u.userIdentifier)|join(', ') }}
                                     {% endif %}
                                 </strong>
                             </h4>

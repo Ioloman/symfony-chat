@@ -10,6 +10,7 @@ use App\Repository\AttachmentRepository;
 use App\Repository\ChatroomRepository;
 use App\Repository\UserRepository;
 use App\Service\UploaderHelper;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -91,14 +92,21 @@ class RoomController extends AbstractController
         EntityManagerInterface $entityManager,
         UrlGeneratorInterface $urlGenerator
     ): Response {
-        $user = $userRepository->find($request->request->get('email'));
-        if ($user) {
+        $criteria = Criteria::create();
+        $criteria->andWhere(Criteria::expr()->in('id', $request->request->get('email')));
+        $users = $userRepository->matching($criteria);
+        if (!$users->isEmpty()) {
             $room = new Chatroom();
+            if ($request->request->get('private', 'off') == 'on') {
+                $room->setType('private');
+            }
             $name = $request->request->get('name');
             $name = trim($name) === "" ? null : $name;
             $room->setName($name);
-            $room->addUser($user);
             $room->addUser($this->getUser());
+            foreach ($users as $user) {
+                $room->addUser($user);
+            }
 
             $entityManager->persist($room);
             $entityManager->flush();

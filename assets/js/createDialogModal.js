@@ -1,5 +1,17 @@
 import $ from 'jquery';
 
+function addField(e) {
+    const $newUserInput = $(this).parent().parent().clone();
+    $newUserInput.find('select').val('');
+    $newUserInput.find('#addField').on('click', addField);
+    $newUserInput.find('#removeField').on('click', removeField);
+    $(this).parent().parent().after($newUserInput);
+}
+
+function removeField(e) {
+    $(this).parent().parent().slideUp().remove();
+}
+
 $(function () {
     $('#createChatroomButton').click(function (e) {
         e.preventDefault();
@@ -28,4 +40,8 @@ $(function () {
             (new bootstrap.Modal(document.getElementById('newDialogModal'))).hide();
         }
     });
+
+    $('#addField').on('click', addField);
+
+    $('#removeField').on('click', removeField);
 });
