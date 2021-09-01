@@ -42,6 +42,15 @@ class ChatroomRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findChatroomsByQuery(string $query)
+    {
+        return $this
+            ->createQueryBuilder('c')
+            ->andWhere('c.type = public')
+            ->andWhere()
+        ;
+    }
+
     /*
     public function findOneBySomeField($value): ?Chatroom
     {

@@ -42,9 +42,10 @@
                                 {% set newUser = false %}
                                 {% set prevUser = message.author %}
                             {% endif %}
-                                    <p>{{ message.text }}
+                                    <p>{{ message.text }}{% if message.text != '' %}<br>{% endif %}
                                         {% for attachment in message.attachments %}
-                                            <img src="{{ path('attachment', {id: chatroom.id, attach_id: attachment.id}) }}">
+                                            <img style="max-width: 20rem" src="{{ path('attachment', {id: chatroom.id, attach_id: attachment.id}) }}">
+                                            {% if not loop.last %}<br>{% endif %}
                                         {% endfor %}
                                     </p>
                             {% endfor %}

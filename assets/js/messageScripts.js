@@ -34,19 +34,24 @@ function sendMessageEventHandler(e) {
 
         $
             .ajax({
-            url: window.location.href,
-            method: 'POST',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-        })
+                url: window.location.href,
+                method: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
             .done(function (data) {
                 if (data['error']) {
-                    alert(data['error'])
+                    alert(data['error']);
                 } else {
                     setMessage(data);
                     scrollChatDown();
+                }
+            })
+            .fail(function (event) {
+                if (event.status === 403) {
+                    alert('Access Restricted. You need to be a member of a chat to send messages!');
                 }
             })
         ;

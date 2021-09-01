@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RoomController extends AbstractController
 {
     /**
-     * @IsGranted("CHAT_AUTH", subject="chatroom")
+     * @IsGranted("ROLE_USER", subject="chatroom")
      */
     public function index(Chatroom $chatroom, Request $request, UploaderHelper $uploaderHelper, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
@@ -50,7 +50,7 @@ class RoomController extends AbstractController
     }
 
     /**
-     * @IsGranted("CHAT_AUTH", subject="chatroom")
+     * @IsGranted("CHAT_AUTH_ATTACHMENT", subject="chatroom")
      */
     public function getAttachment(Chatroom $chatroom, int $attach_id, UploaderHelper $uploaderHelper, AttachmentRepository $repository): StreamedResponse
     {
@@ -132,6 +132,8 @@ class RoomController extends AbstractController
      */
     private function handleAjaxMessage(User $currentUser, Chatroom $chatroom, Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator, UploaderHelper $uploaderHelper): Response|JsonResponse
     {
+        $this->denyAccessUnlessGranted("CHAT_AUTH", $chatroom);
+
         $message = new Message();
         $message->setAuthor($currentUser);
         $message->setChatroom($chatroom);
