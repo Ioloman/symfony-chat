@@ -46,8 +46,12 @@ class ChatroomRepository extends ServiceEntityRepository
     {
         return $this
             ->createQueryBuilder('c')
-            ->andWhere('c.type = public')
-            ->andWhere()
+            ->leftJoin('c.users', 'u')
+            ->andWhere("c.type = 'public'")
+            ->andWhere("c.name LIKE :q OR u.email LIKE :q")
+            ->setParameter('q', '%'.$query.'%')
+            ->getQuery()
+            ->getResult()
         ;
     }
 

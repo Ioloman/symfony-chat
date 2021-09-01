@@ -6,6 +6,7 @@ const availableMIMETypes = ['image/jpeg', 'image/png'];
 function setMessage(messageHtml) {
     const $lastMessageBox = $('.media-chat').last();
     const $newMessageBox = $(messageHtml);
+    $newMessageBox.find('img').on('load', scrollChatDown);
 
     if ($lastMessageBox.length === 0) {
         $('#chatContent').prepend($newMessageBox);
@@ -18,7 +19,7 @@ function setMessage(messageHtml) {
     }
 }
 
-const scrollChatDown = () => $('#chatContent').scrollTop($('#chatBottom').offset().top);
+const scrollChatDown = () => $('#chatContent').scrollTop($('#chatContent')[0].scrollHeight - $('#chatContent')[0].clientHeight);
 
 
 function sendMessageEventHandler(e) {
@@ -46,7 +47,6 @@ function sendMessageEventHandler(e) {
                     alert(data['error']);
                 } else {
                     setMessage(data);
-                    scrollChatDown();
                 }
             })
             .fail(function (event) {
@@ -62,6 +62,17 @@ function sendMessageEventHandler(e) {
 
 $(function () {
     scrollChatDown();
+    $('#chatContent').find('img').on('load', scrollChatDown);
+
+    const target = document.getElementById('chatContent')
+    // create an observer instance
+    const observer = new MutationObserver(function (mutations) {
+        scrollChatDown();
+        console.log($('#chatBottom').offset().top);
+    });
+    // configuration of the observer:
+    const config = {childList: true, subtree: true};
+    observer.observe(target, config);
 
     $('#messageInput').keypress(function (e) {
         if (e.which === 13) {

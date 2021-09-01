@@ -173,10 +173,7 @@ class RoomController extends AbstractController
      */
     public function search(Request $request, ChatroomRepository $chatroomRepository): Response
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere(Criteria::expr()->eq('type', 'public'));
-
-        $templateParams['chatrooms'] = $chatroomRepository->matching($criteria);
+        $templateParams['chatrooms'] = $chatroomRepository->findChatroomsByQuery($request->query->get('q', ''));
 
         return $this->render('room/search.html.twig', $templateParams);
     }

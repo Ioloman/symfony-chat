@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Search{% if app.request.request.get('q') != '' %} "{{ app.request.request.get('q') }}"{% endif %}{% endblock %}
+{% block title %}Search{% if app.request.query.get('q') != '' %} "{{ app.request.query.get('q') }}"{% endif %}{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -8,7 +8,7 @@
             <div class="col-md-3"></div>
             <div class="col-md-6">
                 <form class="d-flex" method="GET">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ app.request.query.get('q') }}"autofocus>
                     <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
                 </form>
                 <div class="list-group mt-5">
