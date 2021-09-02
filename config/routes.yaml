@@ -46,3 +46,9 @@ profile:
   path: /profile
   methods: GET|POST
   controller: App\Controller\SecurityController::profile
+
+
+usersListApi:
+  path: /api/users
+  methods: GET
+  controller: App\Controller\RoomController::usersQuery

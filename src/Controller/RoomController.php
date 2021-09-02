@@ -93,7 +93,7 @@ class RoomController extends AbstractController
         UrlGeneratorInterface $urlGenerator
     ): Response {
         $criteria = Criteria::create();
-        $criteria->andWhere(Criteria::expr()->in('id', $request->request->get('email')));
+        $criteria->andWhere(Criteria::expr()->in('email', $request->request->get('email')));
         $users = $userRepository->matching($criteria);
         if (!$users->isEmpty()) {
             $room = new Chatroom();
@@ -176,5 +176,20 @@ class RoomController extends AbstractController
         $templateParams['chatrooms'] = $chatroomRepository->findChatroomsByQuery($request->query->get('q', ''));
 
         return $this->render('room/search.html.twig', $templateParams);
+    }
+
+    /**
+     * @IsGranted("ROLE_USER")
+     */
+    public function usersQuery(Request $request, UserRepository $userRepository): JsonResponse
+    {
+        return $this->json(
+            $userRepository->findUsersByEmail($request->query->get('q', '')),
+            200,
+            [],
+            [
+                'groups' => 'autocomplete',
+            ]
+        );
     }
 }

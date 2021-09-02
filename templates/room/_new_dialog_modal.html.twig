@@ -17,22 +17,17 @@
                     </div>
                     <div class="mb-3 has-validation">
                         <label for="selectUser" class="form-label">User(s)</label>
+                        <div class="invalid-feedback">
+                            Please choose a username.
+                        </div>
                         <div class="row">
                             <div class="col-10">
-                                <select class="form-select" aria-label="Select User to chat" id="selectUser" name="email[]" required>
-                                    <option selected disabled value="">Select User To Chat</option>
-                                    {% for user in users %}
-                                    <option value="{{ user.id }}">{{ user.userIdentifier }}</option>
-                                    {% endfor %}
-                                </select>
+                                <div id="autocomplete" data-query-url="{{ path('usersListApi') }}"></div>
                             </div>
                             <div class="col-2">
                                 <button type="button" class="no-style" id="addField"><i class="bi bi-plus-circle"></i></button>
                                 <button type="button" class="no-style" id="removeField"><i class="bi bi-dash-circle"></i></button>
                             </div>
-                        </div>
-                        <div class="invalid-feedback">
-                            Please choose a username.
                         </div>
                     </div>
                 </div>

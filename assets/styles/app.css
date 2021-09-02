@@ -42,3 +42,7 @@ button.no-style {
     border: none;
     background: none;
 }
+
+.aa-Panel *, .aa-Panel {
+    z-index: 5000 !important;
+}
