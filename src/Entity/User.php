@@ -190,7 +190,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getProfilePic(): ?string
     {
-        return UploaderHelper::USER_PROFILE_PIC.'/'.$this->profilePic;
+        if ($this->profilePic) {
+            return UploaderHelper::USER_PROFILE_PIC . '/' . $this->profilePic;
+        } else {
+            return null;
+        }
     }
 
     public function setProfilePic(?string $profilePic): self

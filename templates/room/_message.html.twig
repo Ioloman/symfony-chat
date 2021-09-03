@@ -1,6 +1,10 @@
 <div class="media media-chat media-chat-reverse">
     <div>
-        <img class="avatar" src="{{ message.author.profilePic|imagine_filter('user_preview_pic') }}" alt="user pic">
+        {% if message.author.profilePic %}
+            <img class="avatar" src="{{ message.author.profilePic|imagine_filter('user_preview_pic') }}" alt="user pic">
+        {% else %}
+            <img class="avatar" src="https://avatars.dicebear.com/api/pixel-art/{{ message.author.userIdentifier }}.svg?size=100" alt="user pic">
+        {% endif %}
         <span>{{ message.author.userIdentifier }}</span>
         <time datetime="2018">{{ message.createdAt|date('H:i') }}</time>
     </div>

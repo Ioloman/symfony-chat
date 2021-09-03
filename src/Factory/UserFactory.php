@@ -62,23 +62,23 @@ final class UserFactory extends ModelFactory
     {
         // see https://github.com/zenstruck/foundry#initialization
         return $this
-             ->afterInstantiate(function(User $user) {
-                 // copy fake images then "upload" them
-                 $pic = self::faker()->randomElement(self::IMAGES);
-
-                 $fs = new Filesystem();
-                 $targetPath = sys_get_temp_dir().'/'.$pic;
-                 $fs->copy(
-                     __DIR__.'/images/'.$pic,
-                     $targetPath
-                 );
-
-                $user->setProfilePic(
-                    $this->uploaderHelper->uploadUserProfilePic(
-                        new File($targetPath)
-                    )
-                );
-             })
+//             ->afterInstantiate(function(User $user) {
+//                 // copy fake images then "upload" them
+//                 $pic = self::faker()->randomElement(self::IMAGES);
+//
+//                 $fs = new Filesystem();
+//                 $targetPath = sys_get_temp_dir().'/'.$pic;
+//                 $fs->copy(
+//                     __DIR__.'/images/'.$pic,
+//                     $targetPath
+//                 );
+//
+//                $user->setProfilePic(
+//                    $this->uploaderHelper->uploadUserProfilePic(
+//                        new File($targetPath)
+//                    )
+//                );
+//             })
         ;
     }
 

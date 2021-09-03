@@ -18,7 +18,9 @@
                     </div>
                     <div class="col-md-3">
                         {% if app.user.profilePic %}
-                        <img src="{{ app.user.profilePic|imagine_filter('user_preview_pic') }}" height="100">
+                            <img src="{{ app.user.profilePic|imagine_filter('user_preview_pic') }}" height="100">
+                        {% else %}
+                            <img src="https://avatars.dicebear.com/api/pixel-art/{{ app.user.userIdentifier }}.svg?size=100" height="100">
                         {% endif %}
                     </div>
                 </div>

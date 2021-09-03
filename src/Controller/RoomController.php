@@ -95,6 +95,9 @@ class RoomController extends AbstractController
         $criteria = Criteria::create();
         $criteria->andWhere(Criteria::expr()->in('email', $request->request->get('email')));
         $users = $userRepository->matching($criteria);
+        if ($users->count() < count($request->request->get('email'))) {
+            return $this->json(['status' => 'failure', 'message' => "Invalid user email!"]);
+        }
         if (!$users->isEmpty()) {
             $room = new Chatroom();
             if ($request->request->get('private', 'off') == 'on') {
