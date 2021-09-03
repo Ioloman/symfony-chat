@@ -17,6 +17,7 @@ function setMessage(messageHtml) {
             $lastMessageBox.after($newMessageBox);
         }
     }
+    convertYoutubeLinks();
 }
 
 const scrollChatDown = () => $('#chatContent').scrollTop($('#chatContent')[0].scrollHeight - $('#chatContent')[0].clientHeight);
@@ -60,19 +61,62 @@ function sendMessageEventHandler(e) {
     }
 }
 
+/**
+ *
+ * @param {jQuery} $elem
+ * @param {RegExp} regExp
+ */
+const processMessageWithLink = ($elem, regExp) => {
+    if (window.localStorage.getItem('playerId') === null) {
+        window.localStorage.setItem('playerId', 'player-1');
+    }
+    while ($elem.html().search(regExp) > -1) {
+        /** @type Array */
+        const matches = $elem.html().match(regExp);
+
+        const playerId = window.localStorage.getItem('playerId');
+        window.localStorage.setItem('playerId', playerId.split('-')[0] + '-' + (parseInt(playerId.split('-')[1]) + 1));
+
+        $elem.html($elem.html().replace(matches[0], ''))
+        $elem.after($(`<div><div id="${playerId}"></div></div>`));
+
+        new YT.Player(playerId, {
+            height: '200',
+            width: '380',
+            videoId: matches[1],
+        })
+    }
+    if ($elem.html().trim().replaceAll('<br>', '') === "") {
+        $elem.remove();
+    }
+}
+
+const convertYoutubeLinks = () => {
+    $('div.media-body>p').map((i, elem) => {
+        const regExp = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
+        const $elem = $(elem);
+        if ($elem.html().search(regExp) > -1) {
+            processMessageWithLink($elem, regExp);
+        }
+    });
+}
+
+export function onYouTubeIframeAPIReady() {
+    convertYoutubeLinks();
+}
+
 $(function () {
     scrollChatDown();
     $('#chatContent').find('img').on('load', scrollChatDown);
 
-    const target = document.getElementById('chatContent')
-    // create an observer instance
-    const observer = new MutationObserver(function (mutations) {
-        scrollChatDown();
-        console.log($('#chatBottom').offset().top);
-    });
-    // configuration of the observer:
-    const config = {childList: true, subtree: true};
-    observer.observe(target, config);
+    // const target = document.getElementById('chatContent')
+    // // create an observer instance
+    // const observer = new MutationObserver(function (mutations) {
+    //     scrollChatDown();
+    // });
+    // // configuration of the observer:
+    // const config = {childList: true, subtree: true};
+    // observer.observe(target, config);
 
     $('#messageInput').keypress(function (e) {
         if (e.which === 13) {

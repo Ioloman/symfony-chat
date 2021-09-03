@@ -13,6 +13,8 @@ import './bootstrap';
 
 import './js/createDialogModal';
 import './js/messageScripts';
+import { onYouTubeIframeAPIReady } from './js/messageScripts';
+global.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
 // for development
 // TODO: remove later

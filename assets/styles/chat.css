@@ -131,7 +131,7 @@ h4.card-title {
     min-width: 0
 }
 
-.media-chat .media-body p {
+.media-chat .media-body p, .media-chat .media-body div {
     position: relative;
     padding: 6px 8px;
     margin: 4px 0;
@@ -208,12 +208,12 @@ h4.card-title {
     transition: background-color .2s linear
 }
 
-.media-chat.media-chat-reverse .media-body p {
+.media-chat.media-chat-reverse .media-body p, .media-chat.media-chat-reverse .media-body div {
     background-color: #48b0f7;
     color: #fff
 }
 
-.media-chat .media-body p {
+.media-chat .media-body p, .media-chat .media-body div {
     position: relative;
     padding: 6px 8px;
     margin: 4px 0;
