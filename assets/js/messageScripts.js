@@ -194,4 +194,17 @@ $(function () {
             }
         });
     });
+
+    $('#removeChat').on('click', () => {
+        fetch(window.location.href, { method: 'DELETE' })
+            .then(response => {
+                if (!response.ok) {
+                    alert('Some Error Occurred! Code: ' + response.status);
+                    throw new Error('Some Error Occurred! Code: ' + response.status);
+                } else {
+                    window.location.href = '/room';
+                }
+            })
+        ;
+    });
 });

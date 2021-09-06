@@ -4,12 +4,18 @@
 
 {% block body %}
     {% include 'room/_attach_file_modal.html.twig' %}
+    {% if app.user == chatroom.host or is_granted('ROLE_ADMIN') %}
+        {% include 'room/_manage_modal.html.twig' %}
+    {% endif %}
     <div class="container">
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-6">
                     {% if app.user not in chatroom.users %}
                         <button class="btn btn-primary mb-3" id="joinChat"><i class="bi bi-chat-right-dots"></i> Join Chat</button>
+                    {% endif %}
+                    {% if app.user == chatroom.host or is_granted('ROLE_ADMIN') %}
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#manageModal" class="btn btn-primary mb-3" id="manageChatroom"><i class="bi bi-gear"></i> Manage Chatroom</button>
                     {% endif %}
                     <div class="card card-bordered" id="chatBody">
                         <div class="card-header">

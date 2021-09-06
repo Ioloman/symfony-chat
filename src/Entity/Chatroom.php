@@ -47,6 +47,12 @@ class Chatroom
      */
     private $messages;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $host;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -144,6 +150,18 @@ class Chatroom
                 $message->setChatroom(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getHost(): ?User
+    {
+        return $this->host;
+    }
+
+    public function setHost(?User $host): self
+    {
+        $this->host = $host;
 
         return $this;
     }

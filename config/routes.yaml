@@ -62,3 +62,8 @@ joinChat:
   path: /room/{id}/join
   methods: POST
   controller: App\Controller\RoomManageController:joinChat
+
+deleteChat:
+  path: /room/{id}
+  methods: DELETE
+  controller: App\Controller\RoomManageController:deleteChat

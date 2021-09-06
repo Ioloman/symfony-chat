@@ -108,6 +108,7 @@ class RoomController extends AbstractController
             $name = trim($name) === "" ? null : $name;
             $room->setName($name);
             $room->addUser($this->getUser());
+            $room->setHost($this->getUser());
             foreach ($users as $user) {
                 $room->addUser($user);
             }

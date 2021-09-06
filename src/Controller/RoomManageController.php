@@ -31,4 +31,17 @@ class RoomManageController extends AbstractController
             ]);
         }
     }
+
+    /**
+     * @IsGranted("CHAT_AUTH_ADMIN", subject="chatroom")
+     */
+    public function deleteChat(Chatroom $chatroom, EntityManagerInterface $em): JsonResponse
+    {
+        $em->remove($chatroom);
+        $em->flush();
+        return $this->json([
+            'status' => 'success',
+            'message' => 'Chatroom was deleted successfully!',
+        ]);
+    }
 }
