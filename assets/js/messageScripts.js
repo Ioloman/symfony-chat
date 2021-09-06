@@ -141,14 +141,14 @@ $(function () {
     $('#chatContent').find('img').on('load', scrollChatDown);
     $('i.delete-icon').unbind('click').on('click', deleteMessage);
 
-    const target = document.getElementById('chatContent')
-    // create an observer instance
-    const observer = new MutationObserver(function (mutations) {
-        scrollChatDown();
-    });
-    // configuration of the observer:
-    const config = {childList: true, subtree: true};
-    observer.observe(target, config);
+    // const target = document.getElementById('chatContent')
+    // // create an observer instance
+    // const observer = new MutationObserver(function (mutations) {
+    //     scrollChatDown();
+    // });
+    // // configuration of the observer:
+    // const config = {childList: true, subtree: true};
+    // observer.observe(target, config);
 
     $('#messageInput').keypress(function (e) {
         if (e.which === 13) {
@@ -174,5 +174,24 @@ $(function () {
                 $('#closeModalButton').click();
             }
         }
+    });
+
+    $('#joinChat').on('click', function () {
+        fetch(window.location.href + '/join', {
+            method: 'POST',
+        }).then(response => {
+            if (!response.ok) {
+                alert('Some Error Occurred! Code: ' + response.status);
+                throw new Error('Some Error Occurred! Code: ' + response.status);
+            } else {
+                return response.json();
+            }
+        }).then(data => {
+            if (data['status'] === 'success') {
+                window.location.reload();
+            } else {
+                alert(data['message']);
+            }
+        });
     });
 });

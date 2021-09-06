@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RoomController extends AbstractController
 {
     /**
-     * @IsGranted("ROLE_USER", subject="chatroom")
+     * @IsGranted("CHAT_AUTH_WATCH", subject="chatroom")
      */
     public function index(Chatroom $chatroom, Request $request, UploaderHelper $uploaderHelper, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
@@ -51,7 +51,7 @@ class RoomController extends AbstractController
     }
 
     /**
-     * @IsGranted("CHAT_AUTH_ATTACHMENT", subject="chatroom")
+     * @IsGranted("CHAT_AUTH_WATCH", subject="chatroom")
      */
     public function getAttachment(Chatroom $chatroom, int $attach_id, UploaderHelper $uploaderHelper, AttachmentRepository $repository): StreamedResponse
     {

@@ -8,6 +8,9 @@
             <div class="row">
                 <div class="col-md-3"></div>
                 <div class="col-md-6">
+                    {% if app.user not in chatroom.users %}
+                        <button class="btn btn-primary mb-3" id="joinChat"><i class="bi bi-chat-right-dots"></i> Join Chat</button>
+                    {% endif %}
                     <div class="card card-bordered" id="chatBody">
                         <div class="card-header">
                             <h4 class="card-title">
@@ -85,7 +88,7 @@
                             {% else %}
                             <img class="avatar avatar-xs" src="https://avatars.dicebear.com/api/pixel-art/{{ app.user.userIdentifier }}.svg?size=100" alt="...">
                             {% endif %}
-                            <input class="publisher-input" type="text" placeholder="Write your message..." id="messageInput" autofocus>
+                            <input class="publisher-input" type="text" placeholder="Write your message..." id="messageInput" autofocus {% if not is_granted('CHAT_AUTH', chatroom) %}disabled{% endif %}>
                             <button class="publisher-btn file-group" data-bs-toggle="modal" data-bs-target="#attachFileModal">📎</button>
                             <a class="publisher-btn text-decoration-none" href="#" data-abc="true">😃</a>
                             <a class="publisher-btn text-info text-decoration-none" href="#" data-abc="true" id="sendMessageButton">💌</a> </div>

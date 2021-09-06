@@ -57,3 +57,8 @@ usersListApi:
   path: /api/users
   methods: GET
   controller: App\Controller\RoomController::usersQuery
+
+joinChat:
+  path: /room/{id}/join
+  methods: POST
+  controller: App\Controller\RoomManageController:joinChat

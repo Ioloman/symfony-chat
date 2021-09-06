@@ -28,7 +28,13 @@
                                 {{ chatroom.users|filter(u => u != app.user)|map(u => u.userIdentifier)|join(', ') }}
                             {% endif %}
                         </h6>
-                        <small>{{ chatroom.updatedAt|ago }}</small>
+                        <small>
+                            {% if chatroom.messages|last %}
+                                {{ chatroom.messages|last.createdAt|ago }}
+                            {% else %}
+                                {{ chatroom.createdAt|ago }}
+                            {% endif %}
+                        </small>
                     </div>
                     <div class="d-flex w-100">
                         {% if chatroom.messages|last %}

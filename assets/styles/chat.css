@@ -307,4 +307,5 @@ textarea {
 .media-body>div i.delete-icon {
     cursor: pointer;
     color: black;
+    padding-left: 0.5em;
 }

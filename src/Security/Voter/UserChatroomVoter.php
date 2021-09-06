@@ -13,7 +13,7 @@ class UserChatroomVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['CHAT_AUTH', 'CHAT_AUTH_ATTACHMENT'])
+        return in_array($attribute, ['CHAT_AUTH', 'CHAT_AUTH_WATCH'])
             && $subject instanceof Chatroom;
     }
 
@@ -37,10 +37,11 @@ class UserChatroomVoter extends Voter
                     return true;
                 }
                 return false;
-            case 'CHAT_AUTH_ATTACHMENT':
+            case 'CHAT_AUTH_WATCH':
                 if ($subject->getUsers()->contains($user) || $subject->getType() != 'private') {
                     return true;
                 }
+                return false;
         }
 
         return false;
