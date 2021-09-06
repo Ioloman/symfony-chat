@@ -10,12 +10,16 @@
     </div>
     <div class="media-body">
 
-        <p>{{ message.text }}{% if message.text != '' %}<br>{% endif %}
-            {% for attachment in message.attachments %}
-                <img style="max-width: 20rem" src="{{ path('attachment', {id: message.chatroom.id, attach_id: attachment.id}) }}">
-                {% if not loop.last %}<br>{% endif %}
-            {% endfor %}
-        </p>
+        <div class="clearfix" data-id="{{ message.id }}">
+            <div class="float-start">
+                {{ message.text }}{% if message.text != '' and message.attachments.count > 0 %}<br>{% endif %}
+                {% for attachment in message.attachments %}
+                    <img style="max-width: 20rem" src="{{ path('attachment', {id: message.chatroom.id, attach_id: attachment.id}) }}">
+                    {% if not loop.last %}<br>{% endif %}
+                {% endfor %}
+            </div>
+            <div class="float-end"><i class="bi bi-trash-fill delete-icon"></i></div>
+        </div>
 
     </div>
 </div>

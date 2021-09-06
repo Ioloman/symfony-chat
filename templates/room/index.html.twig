@@ -54,12 +54,18 @@
                                 {% set newUser = false %}
                                 {% set prevUser = message.author %}
                             {% endif %}
-                                    <p>{{ message.text }}{% if message.text != '' %}<br>{% endif %}
-                                        {% for attachment in message.attachments %}
-                                            <img style="max-width: 20rem" src="{{ path('attachment', {id: chatroom.id, attach_id: attachment.id}) }}">
-                                            {% if not loop.last %}<br>{% endif %}
-                                        {% endfor %}
-                                    </p>
+                                    <div class="clearfix" data-id="{{ message.id }}">
+                                        <div class="float-start">
+                                            {{ message.text }}{% if message.text != '' and message.attachments.count > 0 %}<br>{% endif %}
+                                            {% for attachment in message.attachments %}
+                                                <img style="max-width: 20rem" src="{{ path('attachment', {id: chatroom.id, attach_id: attachment.id}) }}">
+                                                {% if not loop.last %}<br>{% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        {% if message.author == app.user %}
+                                        <div class="float-end"><i class="bi bi-trash-fill delete-icon"></i></div>
+                                        {% endif %}
+                                    </div>
                             {% endfor %}
 
                             {% if chatroom.messages.count > 0 %}

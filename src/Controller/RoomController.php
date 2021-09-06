@@ -8,6 +8,7 @@ use App\Entity\Message;
 use App\Entity\User;
 use App\Repository\AttachmentRepository;
 use App\Repository\ChatroomRepository;
+use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use App\Service\UploaderHelper;
 use Doctrine\Common\Collections\Criteria;
@@ -169,6 +170,27 @@ class RoomController extends AbstractController
         $chatroom->setUpdatedAt(new \DateTime());
         $entityManager->flush();
         return $this->render('room/_message.html.twig', ['message' => $message]);
+    }
+
+    /**
+     * @IsGranted("CHAT_AUTH", subject="chatroom")
+     */
+    public function deleteMessage(Chatroom $chatroom, int $messageId, MessageRepository $messageRepository, EntityManagerInterface $em): JsonResponse
+    {
+        $message = $messageRepository->find($messageId);
+        if ($this->getUser() != $message->getAuthor()) {
+            return $this->json([
+                'status' => 'error',
+                'message' => 'Not authorized!',
+            ]);
+        } else {
+            $em->remove($message);
+            $em->flush();
+            return $this->json([
+                'status' => 'success',
+                'message' => 'Message was deleted!',
+            ]);
+        }
     }
 
     /**

@@ -18,6 +18,11 @@ roomView:
   methods: GET|POST
   controller: App\Controller\RoomController::index
 
+deleteMessage:
+  path: /room/{id}/message/{messageId}
+  methods: DELETE
+  controller: App\Controller\RoomController::deleteMessage
+
 attachment:
   path: /room/{id}/attachments/{attach_id}
   methods: GET

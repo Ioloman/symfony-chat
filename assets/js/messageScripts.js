@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import { Modal } from "bootstrap";
 
 const availableMIMETypes = ['image/jpeg', 'image/png'];
 
@@ -7,12 +6,13 @@ function setMessage(messageHtml) {
     const $lastMessageBox = $('.media-chat').last();
     const $newMessageBox = $(messageHtml);
     $newMessageBox.find('img').on('load', scrollChatDown);
+    $newMessageBox.find('i.delete-icon').on('click', deleteMessage);
 
     if ($lastMessageBox.length === 0) {
         $('#chatContent').prepend($newMessageBox);
     } else {
         if ($lastMessageBox.hasClass('media-chat-reverse')) {
-            $lastMessageBox.find('.media-body').append($newMessageBox.find('.media-body>p'));
+            $lastMessageBox.find('.media-body').append($newMessageBox.find('.media-body>div'));
         } else {
             $lastMessageBox.after($newMessageBox);
         }
@@ -61,6 +61,26 @@ function sendMessageEventHandler(e) {
     }
 }
 
+function deleteMessage() {
+    const $messageBox = $(this).parent().parent();
+    $.ajax({
+        url: window.location.href + '/message/' + $messageBox.data('id'),
+        method: 'DELETE',
+    }).done(function(response) {
+        if (response['status'] === 'success') {
+            if ($messageBox.siblings().length > 0) {
+                $messageBox.remove();
+            } else {
+                $messageBox.closest('.media-chat').remove();
+            }
+        } else {
+            alert(response['message']);
+        }
+    }).fail(function() {
+        alert('Server Error!')
+    })
+}
+
 /**
  *
  * @param {jQuery} $elem
@@ -80,19 +100,30 @@ const processMessageWithLink = ($elem, regExp) => {
         $elem.html($elem.html().replace(matches[0], ''))
         $elem.after($(`<div><div id="${playerId}"></div></div>`));
 
-        new YT.Player(playerId, {
+        const player = new YT.Player(playerId, {
             height: '200',
             width: '380',
             videoId: matches[1],
         })
+        const $iframe = $(player.h);
+        const $wrapper = $(
+            `<div class="clearfix" data-id="${$elem.data('id')}">
+                <div class="float-start">
+                </div>
+                <div class="float-end"><i class="bi bi-trash-fill delete-icon"></i></div>
+            </div>`
+        );
+        $wrapper.find('.float-start').append($iframe.clone());
+        $iframe.parent().replaceWith($wrapper);
+        $wrapper.find('i.delete-icon').on('click', deleteMessage);
     }
-    if ($elem.html().trim().replaceAll('<br>', '') === "") {
+    if ($elem.find('.float-start').html().trim().replaceAll('<br>', '') === "") {
         $elem.remove();
     }
 }
 
 const convertYoutubeLinks = () => {
-    $('div.media-body>p').map((i, elem) => {
+    $('div.media-body>div').map((i, elem) => {
         const regExp = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
         const $elem = $(elem);
         if ($elem.html().search(regExp) > -1) {
@@ -108,15 +139,16 @@ export function onYouTubeIframeAPIReady() {
 $(function () {
     scrollChatDown();
     $('#chatContent').find('img').on('load', scrollChatDown);
+    $('i.delete-icon').unbind('click').on('click', deleteMessage);
 
-    // const target = document.getElementById('chatContent')
-    // // create an observer instance
-    // const observer = new MutationObserver(function (mutations) {
-    //     scrollChatDown();
-    // });
-    // // configuration of the observer:
-    // const config = {childList: true, subtree: true};
-    // observer.observe(target, config);
+    const target = document.getElementById('chatContent')
+    // create an observer instance
+    const observer = new MutationObserver(function (mutations) {
+        scrollChatDown();
+    });
+    // configuration of the observer:
+    const config = {childList: true, subtree: true};
+    observer.observe(target, config);
 
     $('#messageInput').keypress(function (e) {
         if (e.which === 13) {
