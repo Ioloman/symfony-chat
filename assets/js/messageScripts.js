@@ -207,4 +207,21 @@ $(function () {
             })
         ;
     });
+
+    $('#chatroomNameButton').on('click', () => {
+        fetch(
+            window.location.href,
+            {
+                method: 'PUT',
+                body: new URLSearchParams({ chatroomName: $('#chatroomNameInput').val() }),
+            }
+        ).then(response => {
+            if (!response.ok) {
+                //blink red
+            } else {
+                // blink green
+                $('#chatroomNameInput').val(response.json()['chatroomName']);
+            }
+        })
+    });
 });

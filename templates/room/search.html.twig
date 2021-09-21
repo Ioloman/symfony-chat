@@ -27,7 +27,11 @@
                             <div class="d-flex w-100">
                                 {% if chatroom.messages|last %}
                                     {% set lastMessage = chatroom.messages|last %}
-                                    <img class="avatar avatar-xs" src="{{ lastMessage.author.profilePic|imagine_filter('user_preview_pic') }}" alt="...">
+                                    {% if lastMessage.author.profilePic %}
+                                        <img class="avatar avatar-xs" src="{{ lastMessage.author.profilePic|imagine_filter('user_preview_pic') }}" alt="...">
+                                    {% else %}
+                                        <img class="avatar avatar-xs" src="https://avatars.dicebear.com/api/pixel-art/{{ lastMessage.author.userIdentifier }}.svg?size=100" alt="...">
+                                    {% endif %}
                                     <small class="ms-2 mt-2">{{ lastMessage.text|u.truncate(50, '...') }}{% for attachment in lastMessage.attachments %} [Photo]{% endfor %}</small>
                                     {# for unread messages <span class="badge bg-primary rounded-pill">1</span>#}
                                 {% else %}

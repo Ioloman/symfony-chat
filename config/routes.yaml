@@ -67,3 +67,8 @@ deleteChat:
   path: /room/{id}
   methods: DELETE
   controller: App\Controller\RoomManageController:deleteChat
+
+changeChatName:
+  path: /room/{id}
+  methods: PUT
+  controller: App\Controller\RoomManageController:changeName

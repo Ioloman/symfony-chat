@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,5 +44,20 @@ class RoomManageController extends AbstractController
             'status' => 'success',
             'message' => 'Chatroom was deleted successfully!',
         ]);
+    }
+
+    /**
+     * @IsGranted("CHAT_AUTH_ADMIN", subject="chatroom")
+     */
+    public function changeName(Chatroom $chatroom, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $name = $request->request->get('chatroomName', $chatroom->getName());
+        if ($name == '') {
+            $name = null;
+        }
+        $chatroom->setName($name);
+        $em->flush();
+
+        return $this->json(['chatroomName' => $name]);
     }
 }
