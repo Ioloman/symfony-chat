@@ -217,11 +217,30 @@ $(function () {
             }
         ).then(response => {
             if (!response.ok) {
-                //blink red
-            } else {
-                // blink green
-                $('#chatroomNameInput').val(response.json()['chatroomName']);
+                throw new Error('Bad response');
             }
+            return response.json()
+        }).then(response => {
+            $('#chatroomNameInput').val(response['chatroomName']).css( { background: '#00ff7f' } );
+            setTimeout(() => { $('#chatroomNameInput').css( { background: 'white' } ) }, 1000);
+            $('.card-title > strong').html(response['chatroomName'])
+
+        }).catch(error => {
+            $('#chatroomNameInput').css( { background: '#f13a13' } );
+            setTimeout(() => { $('#chatroomNameInput').css( { background: 'white' } ) }, 1000);
         })
+    });
+
+    $('.deleteUser').on('click', function () {
+        fetch(
+            window.location.href + '/user/' + $(this).parent().parent().data('user-id'),
+            { method: 'DELETE' }
+        ).then(response => {
+            if (!response.ok) {
+                throw new Error('Bad response');
+            }
+            $(this).parent().parent().slideUp(500);
+            setTimeout($(this).parent().parent().remove, 500);
+        });
     });
 });

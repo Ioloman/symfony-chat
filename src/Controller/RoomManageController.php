@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Chatroom;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,5 +60,19 @@ class RoomManageController extends AbstractController
         $em->flush();
 
         return $this->json(['chatroomName' => $name]);
+    }
+
+    /**
+     * @IsGranted("CHAT_AUTH_ADMIN", subject="chatroom")
+     */
+    public function deleteUserFromChat(Chatroom $chatroom, int $user_id, UserRepository $repo, EntityManagerInterface $em): JsonResponse
+    {
+        $user = $repo->find($user_id);
+        if (is_null($user) || $chatroom->getHost() == $user) {
+            $this->createNotFoundException();
+        }
+        $chatroom->removeUser($user);
+        $em->flush();
+        return $this->json(['status' => 'success']);
     }
 }

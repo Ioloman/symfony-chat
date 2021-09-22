@@ -15,6 +15,34 @@
                             <button type="button" class="btn btn-primary" id="chatroomNameButton">Change title</button>
                         </div>
                     </div>
+                    <hr>
+                    <div class="row mx-2">
+                        <div class="clearfix mb-2">
+                            <div class="float-start">
+                                {{ app.user.userIdentifier }}
+                            </div>
+                            <div class="float-end">
+                                {% if app.user == chatroom.host %}
+                                    host
+                                {% else %}
+                                    admin
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% for user in chatroom.users|filter(u => u != app.user) %}
+                            <div class="clearfix mb-2" data-user-id="{{ user.id }}">
+                                <div class="float-start">
+                                    {{ user.userIdentifier }}
+                                </div>
+                                <div class="float-end">
+                                    {% if user == chatroom.host %}
+                                        host
+                                    {% endif %}
+                                    <button type="button" class="no-style deleteUser" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove from chat"><i class="bi bi-x-circle"></i></button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" id="removeChat">Remove Chatroom 🗑</button>
